@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hobby Matchmaker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="navbar">
+    <div class="logo">🎯 Hobby Matchmaker</div>
+    <div class="nav-actions">
+      <!-- Theme Toggle Button -->
+      <button id="themeToggleBtn" class="btn btn-outline" title="Toggle Light/Dark Mode">🌙</button>
+      <button id="openAdminBtn" class="btn btn-outline">🛠️ Admin Panel</button>
+      <button id="openFavBtn" class="btn btn-secondary">❤️ Favorites (<span id="favCount">0</span>)</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- QUESTIONNAIRE / PREFERENCE FORM -->
+    <section class="card hero-section">
+      <h1>Find Your Next Hobby 🇮🇳</h1>
+      <p>Discover personalized hobbies based on your budget, environment, and style.</p>
+
+      <form id="quizForm" class="form-grid">
+        <div class="form-group">
+          <label for="prefSetting">Environment</label>
+          <select id="prefSetting">
+            <option value="any">Any Setting</option>
+            <option value="indoor">🏠 Indoor</option>
+            <option value="outdoor">🌲 Outdoor</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="prefSocial">Social Preference</label>
+          <select id="prefSocial">
+            <option value="any">Any Preference</option>
+            <option value="solo">🧘 Solo / Individual</option>
+            <option value="group">👥 Group / Social</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="prefBudget">Max Monthly Budget: <strong id="budgetValue">₹2,000</strong></label>
+          <input type="range" id="prefBudget" min="0" max="5000" step="500" value="2000">
+        </div>
+
+        <div class="form-group flex-end">
+          <button type="submit" class="btn btn-primary btn-full">✨ Get Matches</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- SEARCH & FILTER BAR -->
+    <section class="filter-bar">
+      <input type="text" id="searchInput" placeholder="Search hobbies (e.g. Cricket, Yoga, Chess)..." class="search-input">
+      <div class="filter-buttons">
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip" data-filter="free">Free</button>
+        <button class="chip" data-filter="indoor">Indoor</button>
+        <button class="chip" data-filter="outdoor">Outdoor</button>
+      </div>
+    </section>
+
+    <!-- HOBBY GRID -->
+    <section id="hobbyGrid" class="hobby-grid"></section>
+
+  </main>
+
+  <!-- HOBBY DETAIL DRAWER -->
+  <div id="detailDrawer" class="drawer-overlay hidden">
+    <div class="drawer">
+      <div class="drawer-header">
+        <span id="drawerCategory" class="badge">CATEGORY</span>
+        <button id="closeDetailDrawer" class="close-btn">&times;</button>
+      </div>
+      <h2 id="drawerTitle">Hobby Title</h2>
+      <p id="drawerDesc">Description goes here...</p>
+
+      <div class="detail-box">
+        <p><strong>Cost:</strong> <span id="drawerCost">₹0</span></p>
+        <p><strong>Time Required:</strong> <span id="drawerTime">2-3 hrs/wk</span></p>
+      </div>
+
+      <h3>Required Equipment:</h3>
+      <ul id="drawerEquipment"></ul>
+
+      <h3>Tips for Beginners:</h3>
+      <p id="drawerTips" class="tips-box"></p>
+
+      <button id="drawerFavBtn" class="btn btn-primary btn-full" style="margin-top: 20px;">❤️ Save to Favorites</button>
+    </div>
+  </div>
+
+  <!-- FAVORITES SIDEBAR -->
+  <div id="favSidebar" class="drawer-overlay hidden">
+    <div class="drawer">
+      <div class="drawer-header">
+        <h2>Your Saved Hobbies</h2>
+        <button id="closeFavSidebar" class="close-btn">&times;</button>
+      </div>
+      <div id="favList" class="stack-list"></div>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL DRAWER -->
+  <div id="adminPanel" class="drawer-overlay hidden">
+    <div class="drawer drawer-wide">
+      <div class="drawer-header">
+        <div>
+          <h2>🛠️ Admin Panel</h2>
+          <small class="text-muted">System Statistics, Hobbies Management & History Logs</small>
+        </div>
+        <button id="closeAdminBtn" class="close-btn">&times;</button>
+      </div>
+
+      <!-- Basic Statistics -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-num" id="statHobbiesCount">0</span>
+          <span class="stat-label">Total Hobbies</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">142</span>
+          <span class="stat-label">Active Users</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">1.2k</span>
+          <span class="stat-label">Matches Generated</span>
+        </div>
+      </div>
+
+      <!-- Add New Hobby Form -->
+      <div class="admin-section">
+        <h3>➕ Add New Hobby</h3>
+        <form id="addHobbyForm" class="form-grid">
+          <div class="form-group">
+            <input type="text" id="newTitle" placeholder="Title" required>
+          </div>
+          <div class="form-group">
+            <input type="text" id="newCategory" placeholder="Category" required>
+          </div>
+          <div class="form-group">
+            <select id="newSetting">
+              <option value="indoor">Indoor</option>
+              <option value="outdoor">Outdoor</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <input type="number" id="newCost" placeholder="Monthly Cost (₹)" required>
+          </div>
+          <div class="form-group">
+            <select id="newSocial">
+              <option value="solo">Solo</option>
+              <option value="group">Group</option>
+            </select>
+          </div>
+          <div class="form-group full-width">
+            <textarea id="newDesc" placeholder="Description" rows="2" required></textarea>
+          </div>
+          <div class="form-group full-width">
+            <button type="submit" class="btn btn-primary btn-full">Save Hobby</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Manage Existing Hobbies -->
+      <div class="admin-section">
+        <h3>📋 Manage Hobbies</h3>
+        <div id="adminHobbiesList" class="stack-list scrollable"></div>
+      </div>
+
+      <!-- Manage Users -->
+      <div class="admin-section">
+        <h3>👥 Manage Users</h3>
+        <div class="stack-list">
+          <div class="list-item">
+            <div>
+              <strong>Aatmoday Admin</strong>
+              <div class="text-muted">admin@aatmoday.com</div>
+            </div>
+            <span class="badge">Admin</span>
+          </div>
+          <div class="list-item">
+            <div>
+              <strong>Rahul Sharma</strong>
+              <div class="text-muted">rahul@example.com</div>
+            </div>
+            <button class="btn-danger-text">Remove</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- System Activity Logs -->
+      <div class="admin-section">
+        <h3>📜 System Activity History Logs</h3>
+        <div id="adminLogs" class="logs-box scrollable"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
