@@ -1,207 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hobby Matchmaker</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hobby Matchmaker | Aatmoday Community Finder</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- HEADER -->
-  <header class="navbar">
-    <div class="logo">🎯 Hobby Matchmaker</div>
-    <div class="nav-actions">
-      <!-- Theme Toggle Button -->
-      <button id="themeToggleBtn" class="btn btn-outline" title="Toggle Light/Dark Mode">🌙</button>
-      <button id="openAdminBtn" class="btn btn-outline">🛠️ Admin Panel</button>
-      <button id="openFavBtn" class="btn btn-secondary">❤️ Favorites (<span id="favCount">0</span>)</button>
+  <!-- Overlay -->
+  <div class="drawer-overlay" id="overlay" onclick="closeDrawers()"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="logo-container">
+      <div class="logo-icon">H</div>
+      <span class="logo-text">Hobby Matcher</span>
+    </div>
+    <div class="header-controls">
+      <button class="btn btn-outline" onclick="toggleTheme()">🌓 Theme</button>
+      <button class="btn btn-fav" onclick="openSavedDrawer()">
+        ❤️ <span id="fav-count">0</span> SAVED
+      </button>
+      <img 
+        src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150" 
+        alt="User Profile" 
+        class="profile-img" 
+        onclick="toggleProfileSidebar()" 
+      />
     </div>
   </header>
 
-  <main class="container">
+  <!-- Container -->
+  <div class="container">
+    
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <button class="filter-chip active" onclick="filterHobbies('all', event)">All Matchups</button>
+      <button class="filter-chip" onclick="filterHobbies('under700', event)">Under ₹700</button>
+      <button class="filter-chip" onclick="filterHobbies('beginner', event)">Beginner Friendly</button>
+      <button class="filter-chip" onclick="filterHobbies('under4hr', event)">Under 4 hrs</button>
+      <button class="filter-chip" onclick="filterHobbies('regional', event)">Regional Indian</button>
+      <button class="filter-chip" onclick="filterHobbies('international', event)">International</button>
+    </div>
 
-    <!-- QUESTIONNAIRE / PREFERENCE FORM -->
-    <section class="card hero-section">
-      <h1>Find Your Next Hobby 🇮🇳</h1>
-      <p>Discover personalized hobbies based on your budget, environment, and style.</p>
+    <!-- Questionnaire Card -->
+    <div class="questionnaire-card">
+      <div class="card-subtitle">✦ AATMODAY COMMUNITY FINDER</div>
+      <h2>What are you curious about?</h2>
+      <p class="desc-text">
+        Write naturally — mix interests, describe a half-formed idea, or say what kind of people you hope to meet. Hinglish is fine.
+      </p>
+      
+      <div class="form-group">
+        <input 
+          type="text" 
+          id="interest-input" 
+          placeholder="I sketch anime characters, love old Hindi film songs, and want to meet chill people..." 
+        />
+      </div>
 
-      <form id="quizForm" class="form-grid">
+      <div class="tags-row">
+        <button class="tag-btn" onclick="addTag('Classical music')">+ Classical music</button>
+        <button class="tag-btn" onclick="addTag('Anime art')">+ Anime art</button>
+        <button class="tag-btn" onclick="addTag('Nukkad natak')">+ Nukkad natak</button>
+        <button class="tag-btn" onclick="addTag('Folk art')">+ Folk art</button>
+        <button class="tag-btn" onclick="addTag('Salsa')">+ Salsa</button>
+        <button class="tag-btn" onclick="addTag('Stargazing')">+ Stargazing</button>
+        <button class="tag-btn" onclick="addTag('Cricket')">+ Cricket</button>
+        <button class="tag-btn" onclick="addTag('Coding')">+ Coding</button>
+      </div>
+
+      <button class="btn btn-primary" onclick="searchMatches()">Find my communities</button>
+    </div>
+
+    <!-- Recommendations Heading -->
+    <div class="section-header">
+      <div>
+        <h2>Your perfect matchups</h2>
+        <p class="desc-text">Regional Indian, international and creative hobbies ranked for your weekly flow.</p>
+      </div>
+      <input type="text" id="search-bar" class="search-input" placeholder="Search hobbies..." oninput="searchMatches()" />
+    </div>
+
+    <!-- Hobby Cards Grid -->
+    <div class="hobby-grid" id="hobby-grid"></div>
+  </div>
+
+  <!-- Profile Sidebar Drawer -->
+  <div class="sidebar-drawer" id="profile-drawer">
+    <div class="drawer-header">
+      <h3>User Profile</h3>
+      <button class="close-btn" onclick="toggleProfileSidebar()">✕</button>
+    </div>
+    <div class="form-group">
+      <label for="user-name">Name</label>
+      <input type="text" id="user-name" value="Amrita Student" />
+    </div>
+    <div class="form-group">
+      <label for="user-email">Email</label>
+      <input type="text" id="user-email" value="amrita@campus.edu" />
+    </div>
+    <div class="form-group">
+      <label for="user-role">Role</label>
+      <input type="text" id="user-role" value="Admin" disabled />
+    </div>
+    <button class="btn btn-primary" style="margin-top: 1rem; width: 100%;" onclick="saveProfile()">Save Changes</button>
+
+    <hr class="divider" />
+
+    <div id="admin-access-section">
+      <h3>Admin Operations</h3>
+      <p class="desc-text" style="margin-bottom: 0.75rem;">Exclusive controls for platform admins.</p>
+      <button class="btn btn-primary" style="width: 100%;" onclick="openAdminModal()">Open Admin Panel</button>
+    </div>
+  </div>
+
+  <!-- Saved Hobbies Drawer -->
+  <div class="sidebar-drawer" id="saved-drawer">
+    <div class="drawer-header">
+      <h3>Saved Hobbies</h3>
+      <button class="close-btn" onclick="closeDrawers()">✕</button>
+    </div>
+    <div id="saved-list-container"></div>
+  </div>
+
+  <!-- Details Modal -->
+  <div class="modal" id="details-modal">
+    <div class="modal-content">
+      <div class="drawer-header">
+        <h2 id="modal-title">Hobby Details</h2>
+        <button class="close-btn" onclick="closeDetailsModal()">✕</button>
+      </div>
+      <div id="modal-body-content"></div>
+    </div>
+  </div>
+
+  <!-- Admin Panel Modal -->
+  <div class="modal" id="admin-modal">
+    <div class="modal-content">
+      <div class="drawer-header">
+        <h2>Admin Management Panel</h2>
+        <button class="close-btn" onclick="closeAdminModal()">✕</button>
+      </div>
+
+      <div class="admin-stats">
+        <div class="stat-card">
+          <h3 id="stat-hobbies-count">0</h3>
+          <p>Total Hobbies</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="stat-users-count">2</h3>
+          <p>Registered Users</p>
+        </div>
+      </div>
+
+      <h3>Add New Hobby</h3>
+      <form onsubmit="addNewHobby(event)">
         <div class="form-group">
-          <label for="prefSetting">Environment</label>
-          <select id="prefSetting">
-            <option value="any">Any Setting</option>
-            <option value="indoor">🏠 Indoor</option>
-            <option value="outdoor">🌲 Outdoor</option>
+          <input type="text" id="new-title" placeholder="Hobby Title" required />
+        </div>
+        <div style="display: flex; gap: 0.5rem;" class="form-group">
+          <select id="new-type" required>
+            <option value="regional">Regional Indian</option>
+            <option value="international">International</option>
           </select>
+          <input type="number" id="new-cost" placeholder="Cost in ₹" required />
         </div>
-
         <div class="form-group">
-          <label for="prefSocial">Social Preference</label>
-          <select id="prefSocial">
-            <option value="any">Any Preference</option>
-            <option value="solo">🧘 Solo / Individual</option>
-            <option value="group">👥 Group / Social</option>
-          </select>
+          <input type="text" id="new-img" placeholder="Image URL" required />
         </div>
-
         <div class="form-group">
-          <label for="prefBudget">Max Monthly Budget: <strong id="budgetValue">₹2,000</strong></label>
-          <input type="range" id="prefBudget" min="0" max="5000" step="500" value="2000">
+          <textarea id="new-desc" placeholder="Brief Description" required></textarea>
         </div>
-
-        <div class="form-group flex-end">
-          <button type="submit" class="btn btn-primary btn-full">✨ Get Matches</button>
-        </div>
+        <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;">Add Hobby</button>
       </form>
-    </section>
 
-    <!-- SEARCH & FILTER BAR -->
-    <section class="filter-bar">
-      <input type="text" id="searchInput" placeholder="Search hobbies (e.g. Cricket, Yoga, Chess)..." class="search-input">
-      <div class="filter-buttons">
-        <button class="chip active" data-filter="all">All</button>
-        <button class="chip" data-filter="free">Free</button>
-        <button class="chip" data-filter="indoor">Indoor</button>
-        <button class="chip" data-filter="outdoor">Outdoor</button>
-      </div>
-    </section>
-
-    <!-- HOBBY GRID -->
-    <section id="hobbyGrid" class="hobby-grid"></section>
-
-  </main>
-
-  <!-- HOBBY DETAIL DRAWER -->
-  <div id="detailDrawer" class="drawer-overlay hidden">
-    <div class="drawer">
-      <div class="drawer-header">
-        <span id="drawerCategory" class="badge">CATEGORY</span>
-        <button id="closeDetailDrawer" class="close-btn">&times;</button>
-      </div>
-      <h2 id="drawerTitle">Hobby Title</h2>
-      <p id="drawerDesc">Description goes here...</p>
-
-      <div class="detail-box">
-        <p><strong>Cost:</strong> <span id="drawerCost">₹0</span></p>
-        <p><strong>Time Required:</strong> <span id="drawerTime">2-3 hrs/wk</span></p>
-      </div>
-
-      <h3>Required Equipment:</h3>
-      <ul id="drawerEquipment"></ul>
-
-      <h3>Tips for Beginners:</h3>
-      <p id="drawerTips" class="tips-box"></p>
-
-      <button id="drawerFavBtn" class="btn btn-primary btn-full" style="margin-top: 20px;">❤️ Save to Favorites</button>
-    </div>
-  </div>
-
-  <!-- FAVORITES SIDEBAR -->
-  <div id="favSidebar" class="drawer-overlay hidden">
-    <div class="drawer">
-      <div class="drawer-header">
-        <h2>Your Saved Hobbies</h2>
-        <button id="closeFavSidebar" class="close-btn">&times;</button>
-      </div>
-      <div id="favList" class="stack-list"></div>
-    </div>
-  </div>
-
-  <!-- ADMIN PANEL DRAWER -->
-  <div id="adminPanel" class="drawer-overlay hidden">
-    <div class="drawer drawer-wide">
-      <div class="drawer-header">
-        <div>
-          <h2>🛠️ Admin Panel</h2>
-          <small class="text-muted">System Statistics, Hobbies Management & History Logs</small>
-        </div>
-        <button id="closeAdminBtn" class="close-btn">&times;</button>
-      </div>
-
-      <!-- Basic Statistics -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <span class="stat-num" id="statHobbiesCount">0</span>
-          <span class="stat-label">Total Hobbies</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-num">142</span>
-          <span class="stat-label">Active Users</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-num">1.2k</span>
-          <span class="stat-label">Matches Generated</span>
-        </div>
-      </div>
-
-      <!-- Add New Hobby Form -->
-      <div class="admin-section">
-        <h3>➕ Add New Hobby</h3>
-        <form id="addHobbyForm" class="form-grid">
-          <div class="form-group">
-            <input type="text" id="newTitle" placeholder="Title" required>
-          </div>
-          <div class="form-group">
-            <input type="text" id="newCategory" placeholder="Category" required>
-          </div>
-          <div class="form-group">
-            <select id="newSetting">
-              <option value="indoor">Indoor</option>
-              <option value="outdoor">Outdoor</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <input type="number" id="newCost" placeholder="Monthly Cost (₹)" required>
-          </div>
-          <div class="form-group">
-            <select id="newSocial">
-              <option value="solo">Solo</option>
-              <option value="group">Group</option>
-            </select>
-          </div>
-          <div class="form-group full-width">
-            <textarea id="newDesc" placeholder="Description" rows="2" required></textarea>
-          </div>
-          <div class="form-group full-width">
-            <button type="submit" class="btn btn-primary btn-full">Save Hobby</button>
-          </div>
-        </form>
-      </div>
-
-      <!-- Manage Existing Hobbies -->
-      <div class="admin-section">
-        <h3>📋 Manage Hobbies</h3>
-        <div id="adminHobbiesList" class="stack-list scrollable"></div>
-      </div>
-
-      <!-- Manage Users -->
-      <div class="admin-section">
-        <h3>👥 Manage Users</h3>
-        <div class="stack-list">
-          <div class="list-item">
-            <div>
-              <strong>Aatmoday Admin</strong>
-              <div class="text-muted">admin@aatmoday.com</div>
-            </div>
-            <span class="badge">Admin</span>
-          </div>
-          <div class="list-item">
-            <div>
-              <strong>Rahul Sharma</strong>
-              <div class="text-muted">rahul@example.com</div>
-            </div>
-            <button class="btn-danger-text">Remove</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- System Activity Logs -->
-      <div class="admin-section">
-        <h3>📜 System Activity History Logs</h3>
-        <div id="adminLogs" class="logs-box scrollable"></div>
-      </div>
-
+      <h3 style="margin-top: 2rem;">Manage Users</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Amrita Student</td>
+            <td>amrita@campus.edu</td>
+            <td>Admin</td>
+          </tr>
+          <tr>
+            <td>Rohan Sharma</td>
+            <td>rohan@campus.edu</td>
+            <td>Student</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
