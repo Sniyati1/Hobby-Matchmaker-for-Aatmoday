@@ -9,7 +9,7 @@ let hobbies = [
     time: '3 HRS / WK',
     level: 'BEGINNER',
     type: 'regional',
-    img: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&q=80&w=600',
+    img: 'madhubani painting.jpg',
     desc: "Mithila's line-and-colour folk art — calming, low-cost, and beautiful even on your first attempt.",
     tools: 'Nib pens, acrylic paints, handmade paper',
     tips: 'Start with simple geometric fish and peacock borders before tackling center subjects.'
